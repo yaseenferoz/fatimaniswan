@@ -38,7 +38,10 @@ function setLanguage(lang) {
     if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
     const target = new URL(href, window.location.href);
     if (isUrdu) target.searchParams.set('lang', 'ur'); else target.searchParams.delete('lang');
-    link.setAttribute('href', target.pathname.split('/').pop() + target.search + target.hash);
+    let path = target.pathname;
+    const localStaticPreview = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+    if (localStaticPreview && path !== '/' && !path.endsWith('.html')) path += '.html';
+    link.setAttribute('href', path + target.search + target.hash);
   });
 }
 langToggle.addEventListener('click', () => setLanguage(document.documentElement.lang === 'ur' ? 'en' : 'ur'));
